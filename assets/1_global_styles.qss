@@ -1,0 +1,15 @@
+QMainWindow { 
+    background-color: @BG_COLOR;
+}
+
+QLabel, QPushButton {
+    font-size: @NORMAL_FONT_SIZE;
+
+    font-weight: 600;
+    color: @PRIMARY_TXT_COLOR;
+}
+
+QPushButton{
+    background-color: @SECOND_BG_COLOR;
+    padding: 8px 8px;
+}

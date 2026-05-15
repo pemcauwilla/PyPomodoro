@@ -7,6 +7,9 @@ from PyQt6.QtWidgets import (
     QGridLayout,
     QHBoxLayout
 )
+import qtawesome as qta
+
+from .components.header_label_card import HeaderLabelCard
 
 class PomodoroView(QFrame):
     def __init__(self):
@@ -16,14 +19,10 @@ class PomodoroView(QFrame):
 
     def _setup_ui(self) -> None:
         # Header Section
-        self.pomodoro_lbl = QLabel("Pomodoro")
-        self.pomodoro_lbl.setProperty("class", "pom_view_header_lbl")
-
-        self.small_break_lbl = QLabel("Small Break")
-        self.small_break_lbl.setProperty("class", "pom_view_header_lbl")
-
-        self.long_break_lbl = QLabel("Long Break")
-        self.long_break_lbl.setProperty("class", "pom_view_header_lbl")
+        self.pomodoro_card = HeaderLabelCard("Pomodoro")
+        self.pomodoro_card.setObjectName("active_header_btn")
+        self.small_break_card = HeaderLabelCard("Small Break")
+        self.long_break_card = HeaderLabelCard("Long Break")
 
         # Timer
         self.pomodoro_timer_lbl = QLabel("25:00")
@@ -31,6 +30,8 @@ class PomodoroView(QFrame):
 
         self.start_pause_btn = QPushButton("Start")
         self.start_pause_btn.setProperty("class", "pom_view_start_btn") # create two different styles for "each" button
+        self.start_pause_btn.setFixedWidth(100)
+        self.start_pause_btn.setCursor(Qt.CursorShape.PointingHandCursor)
 
         # Task Section
         self.current_task_title_lbl = QLabel("Current Task")
@@ -43,44 +44,47 @@ class PomodoroView(QFrame):
         self.current_task_status_lbl.setProperty("class", "pom_view_current_task_lbl") 
 
         # Buttons Section
-        self.task_list_btn = QPushButton("X")
+        self.task_list_btn = QPushButton()
+        self.task_list_btn.setIcon(qta.icon("fa5s.list"))
         self.task_list_btn.setProperty("class", "pom_view_btn")
+        self.task_list_btn.setCursor(Qt.CursorShape.PointingHandCursor)
 
-        self.task_history_btn = QPushButton("Y")
+        self.task_history_btn = QPushButton()
+        self.task_history_btn.setIcon(qta.icon("fa5s.history"))
         self.task_history_btn.setProperty("class", "pom_view_btn")
+        self.task_history_btn.setCursor(Qt.CursorShape.PointingHandCursor)
 
     def _setup_layouts(self) -> None:
-        # Main Layout 
+        # Header Layout 
         header_layout = QGridLayout()
-        header_layout.setSpacing(20)
-        header_layout.setContentsMargins(0,0,0,0)
-        header_layout.addWidget(self.pomodoro_lbl,    0, 1,  alignment=Qt.AlignmentFlag.AlignHCenter)
-        header_layout.addWidget(self.small_break_lbl, 0, 2,  alignment=Qt.AlignmentFlag.AlignHCenter)
-        header_layout.addWidget(self.long_break_lbl,  0, 3 , alignment=Qt.AlignmentFlag.AlignHCenter)
+        header_layout.setSpacing(15)
+        header_layout.setContentsMargins(100,0,100,0)
+        
+        header_layout.addWidget(self.pomodoro_card,    0, 1)
+        header_layout.addWidget(self.small_break_card, 0, 2)
+        header_layout.addWidget(self.long_break_card,  0, 3)
     
-        header_frame = QFrame()
-        header_frame.setLayout(header_layout)
-        header_frame.setStyleSheet("background-color:red;")
-
         # Task Layout
         task_layout = QGridLayout()
+        task_layout.setContentsMargins(10,0,10,0)
         task_layout.addWidget(self.current_task_lbl,        0, 0, alignment=Qt.AlignmentFlag.AlignLeft)
         task_layout.addWidget(self.current_task_status_lbl, 0, 0, alignment=Qt.AlignmentFlag.AlignRight)
 
         task_frame = QFrame()
         task_frame.setLayout(task_layout)
-        task_frame.setStyleSheet("background-color:blue;")
+        task_frame.setProperty("class", "task_frame")
 
         # Task Section Layout
         task_section_layout = QVBoxLayout()
         task_section_layout.setSpacing(5)
-        task_section_layout.setContentsMargins(50,10,50,10)
+        task_section_layout.setContentsMargins(20,10,20,10)
         task_section_layout.addWidget(self.current_task_title_lbl)
         task_section_layout.addWidget(task_frame)
 
         task_section_frame = QFrame()
+        task_section_frame.setFixedWidth(350)
         task_section_frame.setLayout(task_section_layout)
-        task_section_frame.setStyleSheet("background-color:pink;")
+        task_section_frame.setProperty("class", "task_section_frame")
 
         # Buttons Layout
         buttons_layout = QHBoxLayout()
@@ -91,16 +95,17 @@ class PomodoroView(QFrame):
 
         buttons_frame = QFrame()
         buttons_frame.setLayout(buttons_layout)
-        buttons_frame.setStyleSheet("background-color: blue;")
+        buttons_frame.setFixedSize(130, 50)
+        buttons_frame.setProperty("class", "buttons_frame")
 
         # Main layout
         main_layout = QVBoxLayout()
-        main_layout.setSpacing(10)
+        main_layout.setSpacing(15)
         main_layout.setContentsMargins(50,20,50,20)
-        main_layout.addWidget(header_frame)
-        main_layout.addWidget(self.pomodoro_timer_lbl)
-        main_layout.addWidget(self.start_pause_btn)
-        main_layout.addWidget(task_section_frame)
-        main_layout.addWidget(buttons_frame)
+        main_layout.addLayout(header_layout)
+        main_layout.addWidget(self.pomodoro_timer_lbl, alignment=Qt.AlignmentFlag.AlignHCenter)
+        main_layout.addWidget(self.start_pause_btn,    alignment=Qt.AlignmentFlag.AlignHCenter)
+        main_layout.addWidget(task_section_frame,      alignment=Qt.AlignmentFlag.AlignHCenter)
+        main_layout.addWidget(buttons_frame,           alignment=Qt.AlignmentFlag.AlignHCenter)
 
         self.setLayout(main_layout)

@@ -1,0 +1,9 @@
+QFrame[class="header_label_card"]{
+    border-radius: 8px;
+    border: 1px solid @SECONDARY_BORDER_COLOR;
+    background-color: @SECOND_BG_COLOR;
+}
+
+QFrame[class="header_label_card"]#active_header_btn {
+    border-color: @PRIMARY_BORDER_COLOR;
+}
