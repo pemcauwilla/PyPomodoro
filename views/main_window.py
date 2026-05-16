@@ -10,18 +10,18 @@ from PyQt6.QtCore import(
 
 from .pomodoro_view import PomodoroView
 
-@dataclass(frozen=True)
-class MainWindowParameters():
-    WINDOW_HEIGHT: int = 960
-    WINDOW_WIDTH: int = 600
-    WINDOW_TITLE: str = "Pomodoro Timer"
+# ---- Constants ----
+WINDOW_HEIGHT: int = 960
+WINDOW_WIDTH: int = 600
+WINDOW_TITLE: str = "Pomodoro Timer"
+# -------------------
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         
-        self.setFixedSize(QSize(MainWindowParameters.WINDOW_HEIGHT,MainWindowParameters.WINDOW_WIDTH))
-        self.setWindowTitle(MainWindowParameters.WINDOW_TITLE)
+        self.setFixedSize(QSize(WINDOW_HEIGHT,WINDOW_WIDTH))
+        self.setWindowTitle(WINDOW_TITLE)
 
         self._setup_ui()
         self._setup_layout()

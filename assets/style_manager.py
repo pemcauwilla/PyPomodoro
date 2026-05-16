@@ -20,6 +20,7 @@ class AppColors():
 
 @dataclass(frozen=True)
 class FontSize():
+    X_SMALL_FONT_SIZE: str = "12px"
     SMALL_FONT_SIZE: str = "16px"
     NORMAL_FONT_SIZE: str = "20px"
     SUBTITLE_FONT_SIZE: str = "24px"
