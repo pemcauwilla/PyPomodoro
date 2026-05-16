@@ -9,6 +9,7 @@ from PyQt6.QtCore import(
 )
 
 from .pomodoro_view import PomodoroView
+from .history_view import HistoryView
 
 # ---- Constants ----
 WINDOW_HEIGHT: int = 960
@@ -28,9 +29,11 @@ class MainWindow(QMainWindow):
 
     def _setup_ui(self) -> None:
         self.pom_view = PomodoroView()
+        self.hist_view = HistoryView()
 
         self.central_widget = QStackedWidget()   
 
     def _setup_layout(self) -> None:
+        self.central_widget.addWidget(self.hist_view)
         self.central_widget.addWidget(self.pom_view)
         self.setCentralWidget(self.central_widget)

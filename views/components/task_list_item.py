@@ -67,7 +67,7 @@ class TaskListItem(QFrame):
 
         self.setLayout(main_layout)
 
-    def enterEvent(self, event, action):
+    def enterEvent(self, event):
         self.btn_delete_task.show()
         self.btn_select_task.show()
 

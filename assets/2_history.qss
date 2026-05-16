@@ -1,0 +1,17 @@
+QFrame[class="history_view_frame"] {
+    background: @SECOND_BG_COLOR;
+
+    border-radius: 15px;
+}
+
+/* ------ HEADER ------- */
+
+QFrame[class="hist_header_frame"] {
+    background: @THIRD_BG_COLOR;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+QLineEdit[class="hist_input"] { 
+    width: 10px;
+}
