@@ -1,6 +1,5 @@
 import qtawesome as qta
-from PyQt6.QtCore import Qt, QMargins, QSize
-from PyQt6.QtGui import QFontMetrics
+from PyQt6.QtCore import Qt, QMargins, QSize, pyqtSignal
 from PyQt6.QtWidgets import (
     QFrame,
     QHBoxLayout,
@@ -39,17 +38,18 @@ class TaskListItem(QFrame):
         self.task_name_lbl.setText(name_fm.elidedText(self.task_name, Qt.TextElideMode.ElideRight, LBL_MAX_SIZE))
         self.task_name_lbl.setProperty("class", "task_item_lbl")
         
-
         self.btn_select_task = QPushButton()
         self.btn_select_task.setIcon(qta.icon("fa5s.check"))
         self.btn_select_task.setIconSize(BTN_ICON_SIZE)
         self.btn_select_task.setProperty("class", "task_item_btn")
+        self.btn_select_task.setCursor(Qt.CursorShape.PointingHandCursor)
         self.btn_select_task.hide()
 
         self.btn_delete_task = QPushButton()
         self.btn_delete_task.setIcon(qta.icon("fa5s.trash"))
         self.btn_delete_task.setIconSize(BTN_ICON_SIZE)
         self.btn_delete_task.setProperty("class", "task_item_btn")
+        self.btn_delete_task.setCursor(Qt.CursorShape.PointingHandCursor)
         self.btn_delete_task.hide()
 
         self.empty_frame = QFrame()
@@ -67,7 +67,7 @@ class TaskListItem(QFrame):
 
         self.setLayout(main_layout)
 
-    def enterEvent(self, event):
+    def enterEvent(self, event, action):
         self.btn_delete_task.show()
         self.btn_select_task.show()
 

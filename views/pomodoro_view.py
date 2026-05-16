@@ -9,7 +9,8 @@ from PyQt6.QtWidgets import (
     QGridLayout,
     QHBoxLayout,
     QScrollArea,
-    QWidget
+    QStackedWidget,
+    QSpacerItem
 )
 import qtawesome as qta
 
@@ -61,6 +62,7 @@ class PomodoroView(QFrame):
         super().__init__()
         self._setup_ui()
         self._setup_layouts()
+        self._connect_signals()
 
     def _setup_ui(self) -> None:
         # Header Section
@@ -120,6 +122,12 @@ class PomodoroView(QFrame):
         self.task_list_scroll_area.setProperty("class", "task_list_scroll")
         self.task_list_scroll_area.setFixedWidth(TASK_LIST_WIDTH)
 
+        # Task List Stacked Widget + Empty Widget
+        self.task_stacked_wdg = QStackedWidget()
+        self.task_stacked_wdg.setFixedWidth(TASK_LIST_WIDTH) 
+        self.empty_frame = QFrame()
+        self.empty_frame.setProperty("class", "empty_frame")
+
     def _setup_layouts(self) -> None:
         # Header Layout 
         header_layout = QGridLayout()
@@ -165,6 +173,10 @@ class PomodoroView(QFrame):
         
         self.task_list_widget.setLayout(task_list_layout)
         self.task_list_scroll_area.setWidget(self.task_list_widget)
+
+        # Task Stacked Widget
+        self.task_stacked_wdg.addWidget(self.empty_frame)
+        self.task_stacked_wdg.addWidget(self.task_list_scroll_area)
         
         # Header + Timer + Button layout 
         timer_btn_layout = QVBoxLayout()
@@ -177,7 +189,7 @@ class PomodoroView(QFrame):
         # Task_list +  Timer_btn layout
         task_list_timer_btn_layout = QHBoxLayout()
         task_list_timer_btn_layout.setContentsMargins(TTB_MARGINS)
-        task_list_timer_btn_layout.addWidget(self.task_list_scroll_area)
+        task_list_timer_btn_layout.addWidget(self.task_stacked_wdg)
         task_list_timer_btn_layout.addLayout(timer_btn_layout)
         task_list_timer_btn_layout.addSpacing(TASK_LIST_WIDTH)
         
@@ -188,3 +200,10 @@ class PomodoroView(QFrame):
         main_layout.addLayout(task_list_timer_btn_layout)
         
         self.setLayout(main_layout)
+
+    def _connect_signals(self) -> None:
+        self.task_list_btn.clicked.connect(self._task_list_toggle)
+
+    def _task_list_toggle(self) -> None:
+        current = self.task_stacked_wdg.currentIndex()
+        self.task_stacked_wdg.setCurrentIndex((current + 1) % 2)
