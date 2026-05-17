@@ -25,6 +25,7 @@ class MainWindow(QMainWindow):
 
         self._setup_ui()
         self._setup_layout()
+        self._connect_signals()
 
     def _setup_ui(self) -> None:
         self.pom_view = PomodoroView()
@@ -33,6 +34,13 @@ class MainWindow(QMainWindow):
         self.central_widget = QStackedWidget()   
 
     def _setup_layout(self) -> None:
-        self.central_widget.addWidget(self.hist_view)
         self.central_widget.addWidget(self.pom_view)
+        self.central_widget.addWidget(self.hist_view)
         self.setCentralWidget(self.central_widget)
+
+    def _connect_signals(self) -> None:
+        self.pom_view.task_history_btn.clicked.connect(self._change_view)
+        self.hist_view.back_btn.clicked.connect(self._change_view)
+
+    def _change_view(self) -> None:
+        self.central_widget.setCurrentIndex(1 - self.central_widget.currentIndex())

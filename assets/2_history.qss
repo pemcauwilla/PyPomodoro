@@ -47,20 +47,17 @@ QCheckBox[class="hist_check"] {
 
 QComboBox[class="hist_combo"] {
     background: @SECOND_BG_COLOR;
+    padding-left: 5px;
 }
 
-QPushButton[class="spec_day_btn"] {
+QDateEdit[class="spec_day_edit"] {
     font-size: @X_SMALL_FONT_SIZE;
 
     background-color: @BG_COLOR;
     border: none;
-    border-radius: 15px;
+    border-radius: 4px;
 
-    padding: 10px 10px;
-}
-
-QPushButton[class="spec_day_btn"]:pressed {
-    border: 1px solid @PRESSED_BORDER_COLOR;
+    padding: 4px 4px;
 }
 
 /* ----------- SCROLL AREA ----------- */

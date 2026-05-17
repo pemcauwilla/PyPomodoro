@@ -1,5 +1,7 @@
+from typing import Callable
+
 import qtawesome as qta
-from PyQt6.QtCore import Qt, QMargins, QSize
+from PyQt6.QtCore import Qt, QMargins, QSize, QDate
 from PyQt6.QtWidgets import (
     QFrame,
     QVBoxLayout,
@@ -8,8 +10,9 @@ from PyQt6.QtWidgets import (
     QLineEdit,
     QPushButton,
     QCheckBox,
-    QLabel,
-    QComboBox
+    QWidget,
+    QComboBox,
+    QDateEdit
 )
 
 from .components.task_list import TaskList
@@ -46,10 +49,17 @@ TASK_LIST_SPACING: int = 5
 # --------------------
 
 class HistoryView(QFrame):
+    _order_btn_icon_name: list[str] = ["fa5s.sort-amount-down", "fa5s.sort-amount-up"]
+    _order_btn_idx: int = 0
+
     def __init__(self):
         super().__init__()
         self._setup_ui()
         self._setup_layout()
+
+        self._order_btn_action()
+        self.month_check.checkStateChanged.connect(lambda : self._enable_filter(self.month_combo))
+        self.spec_day_check.checkStateChanged.connect(lambda : self._enable_filter(self.spec_day_edit))
 
     def _setup_ui(self) -> None:
         # Back Button
@@ -66,9 +76,8 @@ class HistoryView(QFrame):
         self.input.setProperty("class", "hist_input")
 
         # Order filter
-        arr = ["fa5s.sort-amount-up", "fa5s.sort-amount-down"]
-        self.order_btn = QPushButton()
-        self.order_btn.setIcon(qta.icon("fa5s.sort-amount-down"))
+        self.order_btn = QPushButton() 
+        self.order_btn.setIcon(qta.icon(self._order_btn_icon_name[self._order_btn_idx])) # Amount-down as default icon
         self.order_btn.setIconSize(BTN_ICON_SIZE)
         self.order_btn.setFixedWidth(BTN_WIDTH)
         self.order_btn.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -78,20 +87,31 @@ class HistoryView(QFrame):
         self.month_check = QCheckBox()
         self.month_check.setProperty("class", "hist_check")
         self.month_combo = QComboBox()
+        self.month_combo.setDisabled(True)
+        self.month_combo.addItems([
+            "January", "February", "March", "April", "May", "June", 
+            "July", "August", "September", "October", "November", "December"
+        ])
         self.month_combo.setProperty("class", "hist_combo")
 
         # Week Day Filter
         self.week_day_check = QCheckBox()
         self.week_day_check.setProperty("class", "hist_check")
         self.week_day_combo = QComboBox()
+        self.week_day_combo.setDisabled(True)
+        self.week_day_combo.addItems([
+            "Monday", "Tuesday", "Wednsday", "Thursday", "Friday", "Saturday", "Sunday"
+        ])
         self.week_day_combo.setProperty("class", "hist_combo")
 
         # Day Filter
         self.spec_day_check = QCheckBox()
         self.spec_day_check.setProperty("class", "hist_check")
-        self.spec_day_btn = QPushButton("01/02/26")
-        self.spec_day_btn.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.spec_day_btn.setProperty("class", "spec_day_btn")
+        self.spec_day_edit = QDateEdit() 
+        self.spec_day_edit.setCalendarPopup(True) 
+        self.spec_day_edit.setDate(QDate.currentDate()) 
+        self.spec_day_edit.setDisabled(True)
+        self.spec_day_edit.setProperty("class", "spec_day_edit")
 
         # Header Frame
         self.header_frame = QFrame()
@@ -125,7 +145,7 @@ class HistoryView(QFrame):
         check_combo_layout.addSpacing(CC_SPACING)
 
         check_combo_layout.addWidget(self.spec_day_check)
-        check_combo_layout.addWidget(self.spec_day_btn)
+        check_combo_layout.addWidget(self.spec_day_edit)
 
         header_layout = QGridLayout()
         header_layout.setContentsMargins(HEADER_MARGINS)
@@ -148,3 +168,15 @@ class HistoryView(QFrame):
         window_layout.addWidget(self.main_frame)
 
         self.setLayout(window_layout)
+    
+    # ---------- SIGNAL LOGIC ----------------------- 
+
+    def _order_btn_action(self, action: Callable = None) -> None:
+        self.order_btn.clicked.connect(self._toggle_order_icon)
+
+    def _enable_filter(self, wid : QWidget, action : Callable = None) -> None:
+        wid.setDisabled(wid.isEnabled())
+
+    def _toggle_order_icon(self, action : Callable = None) -> None:
+        self._order_btn_idx = 1 - self._order_btn_idx
+        self.order_btn.setIcon(qta.icon(self._order_btn_icon_name[self._order_btn_idx]))
