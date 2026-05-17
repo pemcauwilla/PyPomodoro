@@ -1,0 +1,22 @@
+QDialog#add_dialog {
+    background-color: @BG_COLOR;
+}
+
+QDialog#add_dialog QLineEdit {
+    background: @SECOND_BG_COLOR;
+    padding: 10px 10px;
+    border-radius: 8px;
+
+    font-size: @SMALL_FONT_SIZE;
+}
+
+QDialog#add_dialog QLineEdit:focus {
+    border: 1px solid @PRESSED_BORDER_COLOR;
+}
+
+QDialog#add_dialog QSpinBox {
+    background: @SECOND_BG_COLOR;
+    padding: 10px 10px;
+
+    font-size: @SMALL_FONT_SIZE;
+}

@@ -27,10 +27,6 @@ class TaskList(QScrollArea):
         self.inner_layout =  QVBoxLayout()
         self.inner_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         
-        # MOCK DATA
-        self.inner_layout.addWidget(HistoryItem("TestAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))
-        self.inner_layout.addWidget(HistoryItem("Test"))
-    
         self.inner_widget.setLayout(self.inner_layout)
 
         self.setWidget(self.inner_widget)

@@ -1,5 +1,3 @@
-from dataclasses import dataclass
-
 from PyQt6.QtCore import Qt, QSize, QMargins
 from PyQt6.QtWidgets import (
     QFrame, 
@@ -8,14 +6,14 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QGridLayout,
     QHBoxLayout,
-    QScrollArea,
     QStackedWidget,
-    QSpacerItem
+    QMainWindow
 )
 import qtawesome as qta
 
 from .components.header_label_card import HeaderLabelCard
 from .components.task_list import TaskList
+from .add_task_dialog import AddTaskDialog
 
 # ---- Constants -----
 # Buttons 
@@ -60,6 +58,7 @@ MAIN_MARGINS: QMargins = QMargins(25,20,25,20)
 class PomodoroView(QFrame):
     def __init__(self):
         super().__init__()
+    
         self._setup_ui()
         self._setup_layouts()
         self._connect_signals()
@@ -99,6 +98,11 @@ class PomodoroView(QFrame):
         self.current_task_frame.setProperty("class", "current_task_frame")
 
         # Buttons Section
+        self.add_task_btn = QPushButton()
+        self.add_task_btn.setIcon(qta.icon("fa5s.plus"))
+        self.add_task_btn.setProperty("class", "pom_view_btn")
+        self.add_task_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+
         self.task_list_btn = QPushButton()
         self.task_list_btn.setIcon(qta.icon("fa5s.list"))
         self.task_list_btn.setProperty("class", "pom_view_btn")
@@ -157,6 +161,7 @@ class PomodoroView(QFrame):
         buttons_layout = QHBoxLayout()
         buttons_layout.setSpacing(BTM_BTN_SPACING)
         buttons_layout.setContentsMargins(BTM_BTN_MARGINS)
+        buttons_layout.addWidget(self.add_task_btn)
         buttons_layout.addWidget(self.task_list_btn)
         buttons_layout.addWidget(self.task_history_btn)
 
@@ -191,7 +196,15 @@ class PomodoroView(QFrame):
 
     def _connect_signals(self) -> None:
         self.task_list_btn.clicked.connect(self._task_list_toggle)
+        self.add_task_btn.clicked.connect(self._add_task_action)
 
     def _task_list_toggle(self) -> None:
         current = self.task_stacked_wdg.currentIndex()
         self.task_stacked_wdg.setCurrentIndex((current + 1) % 2)
+
+    def _add_task_action(self, action) -> None:
+
+        dialog = AddTaskDialog()
+        if dialog.exec():
+            print(dialog.get_add_dialog_values())
+    

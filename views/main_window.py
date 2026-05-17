@@ -28,6 +28,11 @@ class MainWindow(QMainWindow):
         self._connect_signals()
 
     def _setup_ui(self) -> None:
+        qr = self.frameGeometry()
+        cp = self.screen().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+
         self.pom_view = PomodoroView()
         self.hist_view = HistoryView()
 
