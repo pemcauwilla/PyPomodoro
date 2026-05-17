@@ -15,7 +15,7 @@ from PyQt6.QtWidgets import (
 import qtawesome as qta
 
 from .components.header_label_card import HeaderLabelCard
-from .components.task_list_item import TaskListItem
+from .components.task_list import TaskList
 
 # ---- Constants -----
 # Buttons 
@@ -114,13 +114,10 @@ class PomodoroView(QFrame):
         self.buttons_frame.setProperty("class", "buttons_frame")
 
         # Task List
-        self.task_list_widget = QFrame()
-        self.task_list_widget.setProperty("class", "task_list_widget")
-
-        self.task_list_scroll_area = QScrollArea()
-        self.task_list_scroll_area.setWidgetResizable(True)
-        self.task_list_scroll_area.setProperty("class", "task_list_scroll")
-        self.task_list_scroll_area.setFixedWidth(TASK_LIST_WIDTH)
+        self.task_list = TaskList()
+        self.task_list.inner_widget.setProperty("class", "task_list_widget")
+        self.task_list.setFixedWidth(TASK_LIST_WIDTH)
+        self.task_list.setProperty("class", "task_list_scroll")
 
         # Task List Stacked Widget + Empty Widget
         self.task_stacked_wdg = QStackedWidget()
@@ -164,19 +161,12 @@ class PomodoroView(QFrame):
         self.buttons_frame.setLayout(buttons_layout)
 
         # Task List 
-        task_list_layout =  QVBoxLayout()
-        task_list_layout.setContentsMargins(TASK_LIST_MARGINS)
-        task_list_layout.setSpacing(TASK_LIST_SPACING)
-        task_list_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        # MOCK DATA
-        task_list_layout.addWidget(TaskListItem("Test"))
+        self.task_list.inner_layout.setContentsMargins(TASK_LIST_MARGINS)
+        self.task_list.inner_layout.setSpacing(TASK_LIST_SPACING)
         
-        self.task_list_widget.setLayout(task_list_layout)
-        self.task_list_scroll_area.setWidget(self.task_list_widget)
-
         # Task Stacked Widget
         self.task_stacked_wdg.addWidget(self.empty_frame)
-        self.task_stacked_wdg.addWidget(self.task_list_scroll_area)
+        self.task_stacked_wdg.addWidget(self.task_list)
         
         # Header + Timer + Button layout 
         timer_btn_layout = QVBoxLayout()
