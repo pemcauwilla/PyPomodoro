@@ -5,8 +5,13 @@ from PyQt6.QtWidgets import (
     QVBoxLayout
 )
 
+# ----- Constants -----
+
+# ---------------------
+
 # ONLY FOR TESTING
 from .task_list_item import TaskListItem
+from .history_item import HistoryItem
 
 class TaskList(QScrollArea):
     def __init__(self):
@@ -21,10 +26,11 @@ class TaskList(QScrollArea):
     def _setup_layout(self) -> None:
         self.inner_layout =  QVBoxLayout()
         self.inner_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-
+        
         # MOCK DATA
-        self.inner_layout.addWidget(TaskListItem("Test"))
-
+        self.inner_layout.addWidget(HistoryItem("TestAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"))
+        self.inner_layout.addWidget(HistoryItem("Test"))
+    
         self.inner_widget.setLayout(self.inner_layout)
 
         self.setWidget(self.inner_widget)

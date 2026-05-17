@@ -5,13 +5,81 @@ QFrame[class="history_view_frame"] {
 }
 
 /* ------ HEADER ------- */
-
 QFrame[class="hist_header_frame"] {
     background: @THIRD_BG_COLOR;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
 }
 
+QPushButton[class="hist_back_btn"] {
+    border:1px solid @PRIMARY_BORDER_COLOR;
+    border-radius: 10px;
+    background-color:@SECOND_BG_COLOR;    
+}
+
+QPushButton[class="hist_back_btn"]:pressed {
+    border-color: @PRESSED_BORDER_COLOR;
+}
+
 QLineEdit[class="hist_input"] { 
     width: 10px;
+
+    background: @BG_COLOR;
+
+    font-size: @NORMAL_FONT_SIZE;
+    color: @PRIMARY_TXT_COLOR;
+
+    padding-left: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+
+    border: 1px solid @SECONDARY_BORDER_COLOR;
+    border-radius: 15px;
+}
+
+QLineEdit[class="hist_input"]:focus {
+    border-color: @PRESSED_BORDER_COLOR;
+} 
+
+QCheckBox[class="hist_check"] {
+    background: @BG_COLOR;
+}
+
+QComboBox[class="hist_combo"] {
+    background: @SECOND_BG_COLOR;
+}
+
+QPushButton[class="spec_day_btn"] {
+    font-size: @X_SMALL_FONT_SIZE;
+
+    background-color: @BG_COLOR;
+    border: none;
+    border-radius: 15px;
+
+    padding: 10px 10px;
+}
+
+QPushButton[class="spec_day_btn"]:pressed {
+    border: 1px solid @PRESSED_BORDER_COLOR;
+}
+
+/* ----------- SCROLL AREA ----------- */
+
+QFrame[class="history_item"] {
+    border: 1px solid @DARKER_TXT_COLOR;
+    border-radius: 5px;
+}
+
+QScrollArea[class="hist_task_list_scroll"] {
+    background-color: @SECOND_BG_COLOR;
+    border-radius: 15px;  
+}
+
+QLabel[class="hist_item_date"] {
+    font-size: @NORMAL_FONT_SIZE;
+    max-width: 90px;
+}
+
+QLabel[class="hist_item_name"], QLabel[class="hist_item_date"] {
+    font-weight: 400;
 }

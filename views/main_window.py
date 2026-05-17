@@ -20,7 +20,6 @@ WINDOW_TITLE: str = "Pomodoro Timer"
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        
         self.setFixedSize(QSize(WINDOW_HEIGHT,WINDOW_WIDTH))
         self.setWindowTitle(WINDOW_TITLE)
 

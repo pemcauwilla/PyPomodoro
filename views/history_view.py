@@ -12,6 +12,8 @@ from PyQt6.QtWidgets import (
     QComboBox
 )
 
+from .components.task_list import TaskList
+
 # ---- Constants -----
 # Window Spacings
 HISTORY_MARGINS: QMargins = QMargins(30,30,30,30,)
@@ -24,13 +26,23 @@ HEADER_MARGINS: QMargins = QMargins(15,5,15,0)
 HEADER_HEIGHT: int = 70
 
 # Header Measures
-INPUT_SIZE: QSize  = QSize(350, 32)
+INPUT_SIZE: QSize  = QSize(350, 35)
 
 # Button Measures
 BTN_ICON_SIZE: QSize = QSize(18,18)
+BACK_ICON_SIZE: QSize = QSize(14,14)
 
 BTN_WIDTH: int = 50
+BACK_BTN_WIDTH: int = 35
 
+# CheckBox + ComboBox Spacings
+CC_SPACING: int = 25
+
+# Task History Spacings
+TASK_LIST_WIDTH: int = 540
+
+TASK_LIST_MARGINS: QMargins = QMargins(5,5,5,5)
+TASK_LIST_SPACING: int = 5
 # --------------------
 
 class HistoryView(QFrame):
@@ -40,51 +52,77 @@ class HistoryView(QFrame):
         self._setup_layout()
 
     def _setup_ui(self) -> None:
+        # Back Button
+        self.back_btn = QPushButton()
+        self.back_btn.setIcon(qta.icon("fa5s.chevron-left"))
+        self.back_btn.setIconSize(BACK_ICON_SIZE)
+        self.back_btn.setFixedWidth(BACK_BTN_WIDTH)
+        self.back_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.back_btn.setProperty("class", "hist_back_btn")
+        
+        # Input
         self.input =  QLineEdit()
         self.input.setFixedSize(INPUT_SIZE)
         self.input.setProperty("class", "hist_input")
 
+        # Order filter
         arr = ["fa5s.sort-amount-up", "fa5s.sort-amount-down"]
         self.order_btn = QPushButton()
         self.order_btn.setIcon(qta.icon("fa5s.sort-amount-down"))
         self.order_btn.setIconSize(BTN_ICON_SIZE)
         self.order_btn.setFixedWidth(BTN_WIDTH)
-
+        self.order_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         self.order_btn.setProperty("class", "order_btn")
         
+        # Month Filter
         self.month_check = QCheckBox()
-        #self.month_check.setProperty("class", "month_check")
-        
+        self.month_check.setProperty("class", "hist_check")
         self.month_combo = QComboBox()
-        self.month_combo.setProperty("class", "hist_comhist_bo")
+        self.month_combo.setProperty("class", "hist_combo")
 
+        # Week Day Filter
         self.week_day_check = QCheckBox()
-        
+        self.week_day_check.setProperty("class", "hist_check")
         self.week_day_combo = QComboBox()
         self.week_day_combo.setProperty("class", "hist_combo")
 
+        # Day Filter
         self.spec_day_check = QCheckBox()
-        
-        self.spec_day_btn = QPushButton("x")
+        self.spec_day_check.setProperty("class", "hist_check")
+        self.spec_day_btn = QPushButton("01/02/26")
+        self.spec_day_btn.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.spec_day_btn.setProperty("class", "spec_day_btn")
 
+        # Header Frame
         self.header_frame = QFrame()
         self.header_frame.setFixedHeight(HEADER_HEIGHT)
         self.header_frame.setProperty("class", "hist_header_frame")
 
+        # Task List
+        self.task_list = TaskList()
+        self.task_list.inner_layout.setContentsMargins(TASK_LIST_MARGINS)
+        self.task_list.inner_layout.setSpacing(TASK_LIST_SPACING)
+        self.task_list.inner_widget.setProperty("class", "task_list_widget")
+        self.task_list.setProperty("class", "hist_task_list_scroll")
+
+        # Global Frame
         self.main_frame = QFrame()
         self.main_frame.setProperty("class", "history_view_frame")
 
     def _setup_layout(self) -> None:
         input_order_layout = QHBoxLayout()
+        input_order_layout.addWidget(self.back_btn)
         input_order_layout.addWidget(self.input)
         input_order_layout.addWidget(self.order_btn)
         
         check_combo_layout = QHBoxLayout()
         check_combo_layout.addWidget(self.month_check)
         check_combo_layout.addWidget(self.month_combo)
+        check_combo_layout.addSpacing(CC_SPACING)
 
         check_combo_layout.addWidget(self.week_day_check)
         check_combo_layout.addWidget(self.week_day_combo)
+        check_combo_layout.addSpacing(CC_SPACING)
 
         check_combo_layout.addWidget(self.spec_day_check)
         check_combo_layout.addWidget(self.spec_day_btn)
@@ -96,14 +134,12 @@ class HistoryView(QFrame):
 
         self.header_frame.setLayout(header_layout)
 
-        history_layout = QVBoxLayout()
-        history_layout.addWidget(QLabel("Teste"))
-
         main_layout = QVBoxLayout()
         main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        main_layout.setSpacing(0)
         main_layout.setContentsMargins(MAIN_MARGINS)
         main_layout.addWidget(self.header_frame)
-        main_layout.addLayout(history_layout)
+        main_layout.addWidget(self.task_list)
         self.main_frame.setLayout(main_layout)
 
         # Window Layout

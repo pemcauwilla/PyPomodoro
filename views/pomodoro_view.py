@@ -117,6 +117,8 @@ class PomodoroView(QFrame):
         self.task_list = TaskList()
         self.task_list.inner_widget.setProperty("class", "task_list_widget")
         self.task_list.setFixedWidth(TASK_LIST_WIDTH)
+        self.task_list.inner_layout.setContentsMargins(TASK_LIST_MARGINS)
+        self.task_list.inner_layout.setSpacing(TASK_LIST_SPACING)
         self.task_list.setProperty("class", "task_list_scroll")
 
         # Task List Stacked Widget + Empty Widget
@@ -160,10 +162,6 @@ class PomodoroView(QFrame):
 
         self.buttons_frame.setLayout(buttons_layout)
 
-        # Task List 
-        self.task_list.inner_layout.setContentsMargins(TASK_LIST_MARGINS)
-        self.task_list.inner_layout.setSpacing(TASK_LIST_SPACING)
-        
         # Task Stacked Widget
         self.task_stacked_wdg.addWidget(self.empty_frame)
         self.task_stacked_wdg.addWidget(self.task_list)
