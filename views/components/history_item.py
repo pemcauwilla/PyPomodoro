@@ -18,10 +18,11 @@ LBL_MAX_SIZE = 400
 # -------------------
 
 class HistoryItem(QFrame):
-    def __init__(self, name : str, date : str):
+    def __init__(self, name : str, date : str, id : int):
         super().__init__()
         self.name = name
         self.date = date
+        self.id = id 
 
         self._setup_ui()
         self._setup_layout()

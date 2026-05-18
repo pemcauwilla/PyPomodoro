@@ -37,7 +37,7 @@ class PomodoroController():
     # ---------- HELPERS ------------
     def _refresh_task_list(self) -> None:
         raw_task_list = self.model.get_all_tasks()
-        task_list = [TaskListItem(task["name"]) for task in raw_task_list]
+        task_list = [TaskListItem(task["name"], task["id"]) for task in raw_task_list]
         
         self.view.task_list.load_list(task_list)
 

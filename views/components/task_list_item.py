@@ -20,9 +20,9 @@ LBL_MAX_SIZE: int = 120
 # -----------------
 
 class TaskListItem(QFrame):
-    def __init__(self, task_name : str):
-        # Est-ce que la view doit avoir un ID?
+    def __init__(self, task_name : str, id : int):
         self.task_name = task_name
+        self.id = id
         
         super().__init__()
         self._setup_ui()

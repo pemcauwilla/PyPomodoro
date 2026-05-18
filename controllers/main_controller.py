@@ -20,7 +20,7 @@ class MainViewController():
 
     def _stacked_widget_action(self) -> None:
         if self.view.central_widget.currentIndex() == 0:
-            self.hist_controller._refresh_history_list()
+            self.hist_controller._apply_filters()
         
         self.view.central_widget.setCurrentIndex(1 - self.view.central_widget.currentIndex())
 
