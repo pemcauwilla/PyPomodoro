@@ -193,7 +193,7 @@ class PomodoroView(QFrame):
         
         self.setLayout(main_layout)
 
-    def bind_btn_clicked_action(self, btn : QPushButton, action : Callable) -> None:
+    def bind_btn_clicked(self, btn : QPushButton, action : Callable) -> None:
         btn.clicked.connect(action)
 
         

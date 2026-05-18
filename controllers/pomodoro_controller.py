@@ -13,8 +13,8 @@ class PomodoroController():
         self._connect_signals()
 
     def _connect_signals(self) -> None:
-        self.view.bind_btn_clicked_action(btn=self.view.task_list_btn, action=self._task_list_btn_action)
-        self.view.bind_btn_clicked_action(btn=self.view.add_task_btn, action=self._add_btn_action)
+        self.view.bind_btn_clicked(btn=self.view.task_list_btn, action=self._task_list_btn_action)
+        self.view.bind_btn_clicked(btn=self.view.add_task_btn, action=self._add_btn_action)
 
     def _task_list_btn_action(self) -> None:
         # Visual Changes

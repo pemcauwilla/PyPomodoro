@@ -2,7 +2,7 @@ from views.main_window import MainWindow
 from models.task_model import TaskModel
 from .history_controller import HistoryController
 from .pomodoro_controller import PomodoroController
-from views.components.history_item import HistoryItem
+
 
 class MainViewController():
     def __init__(self, view : MainWindow, model : TaskModel):
@@ -20,14 +20,10 @@ class MainViewController():
 
     def _stacked_widget_action(self) -> None:
         if self.view.central_widget.currentIndex() == 0:
-            self._refresh_history_list()
+            self.hist_controller._refresh_history_list()
         
         self.view.central_widget.setCurrentIndex(1 - self.view.central_widget.currentIndex())
 
-    def _refresh_history_list(self) -> None:
-        raw_history_list = self.model.get_all_tasks()
-        history_list = [HistoryItem(task["name"], task["date"]) for task in raw_history_list]
-        
-        self.view.hist_view.task_list.load_list(history_list)
+    
 
         

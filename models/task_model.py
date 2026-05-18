@@ -60,6 +60,40 @@ class TaskModel:
         except Exception as e:
             print(e)
             return []
+        
+    def get_tasks(self, month: int = None, day_str: str = None, weekday: int = None) -> list[dict]:
+        try:
+            with sqlite3.connect(self.db_name) as conn:
+                conn.row_factory = sqlite3.Row
+                cursor = conn.cursor()
+                
+                query = "SELECT * FROM tasks"
+                conditions = []
+                params = []
+                
+                if month is not None:
+                    conditions.append("strftime('%m', date) = ?")
+                    params.append(f"{month:02d}")
+                    
+                if day_str is not None:
+                    conditions.append("date = ?")
+                    params.append(day_str)
+                             
+                if weekday is not None:
+                    conditions.append("strftime('%W', date) = strftime('%W', 'now')")
+                    conditions.append("strftime('%Y', date) = strftime('%Y', 'now')")
+                    conditions.append("cast(strftime('%w', date) as integer) = ?")
+                    params.append(weekday)
+                    
+                if conditions:
+                    query += " WHERE " + " AND ".join(conditions)
+                    
+                cursor.execute(query, tuple(params))
+                return [dict(row) for row in cursor.fetchall()]
+
+        except Exception as e:
+            print(f"Erreur SQL lors de la récupération dynamique : {e}")
+            return []
 
     def delete_task(self, task_id : int) -> bool:
         """Delete a certain task according to its ID"""

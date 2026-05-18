@@ -49,17 +49,11 @@ TASK_LIST_SPACING: int = 5
 # --------------------
 
 class HistoryView(QFrame):
-    _order_btn_icon_name: list[str] = ["fa5s.sort-amount-down", "fa5s.sort-amount-up"]
-    _order_btn_idx: int = 0
-
     def __init__(self):
         super().__init__()
         self._setup_ui()
         self._setup_layout()
 
-        self._order_btn_action()
-        self.month_check.checkStateChanged.connect(lambda : self._enable_filter(self.month_combo))
-        self.spec_day_check.checkStateChanged.connect(lambda : self._enable_filter(self.spec_day_edit))
 
     def _setup_ui(self) -> None:
         # Back Button
@@ -77,7 +71,7 @@ class HistoryView(QFrame):
 
         # Order filter
         self.order_btn = QPushButton() 
-        self.order_btn.setIcon(qta.icon(self._order_btn_icon_name[self._order_btn_idx])) # Amount-down as default icon
+        self.order_btn.setIcon(qta.icon("fa5s.sort-amount-down")) # Amount-down as default icon
         self.order_btn.setIconSize(BTN_ICON_SIZE)
         self.order_btn.setFixedWidth(BTN_WIDTH)
         self.order_btn.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -169,17 +163,16 @@ class HistoryView(QFrame):
 
         self.setLayout(window_layout)
     
-    def _bind_btn_clicked(self, btn : QPushButton, action: Callable) -> None:
+    def bind_btn_clicked(self, btn : QPushButton, action: Callable) -> None:
         btn.clicked.connect(action)
     
-    def _order_btn_action(self, action: Callable = None) -> None:
-        self.order_btn.clicked.connect(self._toggle_order_icon)
+    def bind_check_clicked(self, checkBox : QCheckBox, action : Callable):
+        checkBox.clicked.connect(action)
 
-    def _enable_filter(self, wid : QWidget, action : Callable = None) -> None:
-        wid.setDisabled(wid.isEnabled())
+    def bind_combo_changed(self, comboBox : QComboBox, action : Callable):
+        comboBox.currentIndexChanged.connect(action)
 
-    def _toggle_order_icon(self, action : Callable = None) -> None:
-        self._order_btn_idx = 1 - self._order_btn_idx
-        self.order_btn.setIcon(qta.icon(self._order_btn_icon_name[self._order_btn_idx]))
+    def bind_dateEdit_changed(self, action : Callable):
+        self.spec_day_edit.dateChanged.connect(action)
+    
 
-        
