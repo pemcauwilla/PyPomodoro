@@ -18,9 +18,10 @@ LBL_MAX_SIZE = 400
 # -------------------
 
 class HistoryItem(QFrame):
-    def __init__(self, task_name : str):
+    def __init__(self, name : str, date : str):
         super().__init__()
-        self.task_name = task_name
+        self.name = name
+        self.date = date
 
         self._setup_ui()
         self._setup_layout()
@@ -29,12 +30,12 @@ class HistoryItem(QFrame):
         self.setProperty("class", "history_item")
         self.setMinimumWidth(ITEM_WIDTH)
 
-        self.name_lbl = QLabel(self.task_name)
+        self.name_lbl = QLabel(self.name)
         name_fm = self.name_lbl.fontMetrics()
-        self.name_lbl.setText(name_fm.elidedText(self.task_name, Qt.TextElideMode.ElideRight, LBL_MAX_SIZE))
+        self.name_lbl.setText(name_fm.elidedText(self.name, Qt.TextElideMode.ElideRight, LBL_MAX_SIZE))
         self.name_lbl.setProperty("class", "hist_item_name")
 
-        self.task_date = QLabel("01/02/03")
+        self.task_date = QLabel(self.date)
         self.task_date.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.task_date.setProperty("class", "hist_item_date")
         

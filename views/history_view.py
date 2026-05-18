@@ -169,8 +169,9 @@ class HistoryView(QFrame):
 
         self.setLayout(window_layout)
     
-    # ---------- SIGNAL LOGIC ----------------------- 
-
+    def _bind_btn_clicked(self, btn : QPushButton, action: Callable) -> None:
+        btn.clicked.connect(action)
+    
     def _order_btn_action(self, action: Callable = None) -> None:
         self.order_btn.clicked.connect(self._toggle_order_icon)
 
@@ -180,3 +181,5 @@ class HistoryView(QFrame):
     def _toggle_order_icon(self, action : Callable = None) -> None:
         self._order_btn_idx = 1 - self._order_btn_idx
         self.order_btn.setIcon(qta.icon(self._order_btn_icon_name[self._order_btn_idx]))
+
+        

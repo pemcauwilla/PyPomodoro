@@ -1,8 +1,9 @@
-from dataclasses import dataclass
+from typing import Callable
 
 from PyQt6.QtWidgets import(
     QMainWindow,
-    QStackedWidget
+    QStackedWidget,
+    QPushButton
 )
 from PyQt6.QtCore import(
     QSize
@@ -25,7 +26,6 @@ class MainWindow(QMainWindow):
 
         self._setup_ui()
         self._setup_layout()
-        self._connect_signals()
 
     def _setup_ui(self) -> None:
         qr = self.frameGeometry()
@@ -43,9 +43,6 @@ class MainWindow(QMainWindow):
         self.central_widget.addWidget(self.hist_view)
         self.setCentralWidget(self.central_widget)
 
-    def _connect_signals(self) -> None:
-        self.pom_view.task_history_btn.clicked.connect(self._change_view)
-        self.hist_view.back_btn.clicked.connect(self._change_view)
+    def bind_btn_clicked(self, btn : QPushButton, action : Callable) -> None:
+        btn.clicked.connect(action)
 
-    def _change_view(self) -> None:
-        self.central_widget.setCurrentIndex(1 - self.central_widget.currentIndex())
