@@ -5,14 +5,6 @@ from PyQt6.QtWidgets import (
     QVBoxLayout
 )
 
-# ----- Constants -----
-
-# ---------------------
-
-# ONLY FOR TESTING
-from .task_list_item import TaskListItem
-from .history_item import HistoryItem
-
 class TaskList(QScrollArea):
     def __init__(self):
         super().__init__()
@@ -30,3 +22,17 @@ class TaskList(QScrollArea):
         self.inner_widget.setLayout(self.inner_layout)
 
         self.setWidget(self.inner_widget)
+
+    def load_list(self, item_list : list[QFrame]) -> None:
+        self._clear_layout()        
+
+        for item in item_list:
+            self.inner_layout.addWidget(item)
+
+    def _clear_layout(self) -> None:
+        while self.inner_layout.count():
+            item = self.inner_layout.takeAt(0)
+            widget = item.widget()
+            
+            if widget is not None:
+                widget.deleteLater()

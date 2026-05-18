@@ -43,16 +43,17 @@ class TaskModel:
             print(e)
             return -1
         
-    def get_all_tasks(self) -> list:
+    def get_all_tasks(self) -> list[dict]:
         """Return all tasks in the database"""
         try:
             with sqlite3.connect(self.db_name) as conn:
+                conn.row_factory = sqlite3.Row
                 cursor = conn.cursor()
                 query = """
                 SELECT * from tasks
                 """
                 cursor.execute(query)
-                task_list = cursor.fetchall()
+                task_list = [dict(row) for row in cursor.fetchall()]
 
             cursor.close()
             return task_list
@@ -80,5 +81,6 @@ class TaskModel:
 
 if __name__ == "__main__":
     db = TaskModel()
+    print(db.get_all_tasks())
     
    

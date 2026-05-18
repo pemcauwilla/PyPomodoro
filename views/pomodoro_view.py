@@ -1,3 +1,5 @@
+from typing import Callable
+
 from PyQt6.QtCore import Qt, QSize, QMargins
 from PyQt6.QtWidgets import (
     QFrame, 
@@ -7,13 +9,12 @@ from PyQt6.QtWidgets import (
     QGridLayout,
     QHBoxLayout,
     QStackedWidget,
-    QMainWindow
+    QWidget
 )
 import qtawesome as qta
 
 from .components.header_label_card import HeaderLabelCard
 from .components.task_list import TaskList
-from .add_task_dialog import AddTaskDialog
 
 # ---- Constants -----
 # Buttons 
@@ -58,10 +59,8 @@ MAIN_MARGINS: QMargins = QMargins(25,20,25,20)
 class PomodoroView(QFrame):
     def __init__(self):
         super().__init__()
-    
         self._setup_ui()
         self._setup_layouts()
-        self._connect_signals()
 
     def _setup_ui(self) -> None:
         # Header Section
@@ -194,17 +193,7 @@ class PomodoroView(QFrame):
         
         self.setLayout(main_layout)
 
-    def _connect_signals(self) -> None:
-        self.task_list_btn.clicked.connect(self._task_list_toggle)
-        self.add_task_btn.clicked.connect(self._add_task_action)
+    def bind_btn_clicked_action(self, btn : QWidget, action : Callable) -> None:
+        btn.clicked.connect(action)
 
-    def _task_list_toggle(self) -> None:
-        current = self.task_stacked_wdg.currentIndex()
-        self.task_stacked_wdg.setCurrentIndex((current + 1) % 2)
-
-    def _add_task_action(self, action) -> None:
-
-        dialog = AddTaskDialog()
-        if dialog.exec():
-            print(dialog.get_add_dialog_values())
-    
+        
