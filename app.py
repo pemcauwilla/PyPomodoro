@@ -14,7 +14,7 @@ class App():
         app = QApplication(sys.argv)
         app.setStyleSheet(StyleManager.get_complete_stylesheet())
         model = TaskModel()
-        window = MainWindow(model)
+        window = MainWindow(model=model)
         main_controller = MainViewController(view=window, model=model)
         window.show()
         sys.exit(app.exec())

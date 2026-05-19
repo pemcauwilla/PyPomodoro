@@ -11,6 +11,6 @@ class Subject():
     def notify(self) -> None:
         """Call update method on each of the current observers"""
         for obs in self.observers:
-            obs.update()
+            obs.refresh_data()
 
             
