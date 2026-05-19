@@ -1,5 +1,5 @@
 import qtawesome as qta
-from PyQt6.QtCore import QMargins, Qt
+from PyQt6.QtCore import QMargins, Qt, pyqtSignal
 from PyQt6.QtWidgets import (
     QFrame,
     QHBoxLayout,
@@ -18,6 +18,7 @@ LBL_MAX_SIZE = 400
 # -------------------
 
 class HistoryItem(QFrame):
+    del_btn_signal = pyqtSignal(int)
     def __init__(self, name : str, date : str, id : int):
         super().__init__()
         self.name = name
@@ -43,6 +44,7 @@ class HistoryItem(QFrame):
         self.delete_btn = QPushButton()
         self.delete_btn.setIcon(qta.icon("fa5s.trash"))
         self.delete_btn.setMaximumWidth(BTN_WIDTH)
+        self.delete_btn.clicked.connect(lambda : self.del_btn_signal.emit(self.id))
         self.setCursor(Qt.CursorShape.PointingHandCursor)
 
     def _setup_layout(self) -> None:

@@ -1,6 +1,6 @@
 from typing import Callable, override
 
-from PyQt6.QtCore import Qt, QSize, QMargins
+from PyQt6.QtCore import Qt, QSize, QMargins, pyqtSignal
 from PyQt6.QtWidgets import (
     QFrame, 
     QLabel,
@@ -60,6 +60,9 @@ MAIN_MARGINS: QMargins = QMargins(25,20,25,20)
 #---------------------
 
 class PomodoroView(QFrame, Observer):
+    task_del_sig = pyqtSignal(int)
+    task_select_sig = pyqtSignal(int)
+    
     def __init__(self, model : TaskModel):
         super().__init__()
         self.model = model
@@ -206,6 +209,12 @@ class PomodoroView(QFrame, Observer):
     @override
     def refresh_data(self) -> None:
         raw_task_list = self.model.get_all_tasks()
-        task_list = [TaskListItem(task["name"], task["id"]) for task in raw_task_list]
+        task_list = []
         
+        for task in raw_task_list:
+            item = TaskListItem(task["name"], task["id"])
+            item.sel_btn_clicked_sig.connect(self.task_select_sig.emit)
+            item.del_btn_clicked_sig.connect(self.task_del_sig.emit)        
+            task_list.append(item)
+
         self.task_list.load_list(task_list)

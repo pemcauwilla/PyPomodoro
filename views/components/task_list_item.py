@@ -1,3 +1,5 @@
+from typing import Callable
+
 import qtawesome as qta
 from PyQt6.QtCore import Qt, QMargins, QSize, pyqtSignal
 from PyQt6.QtWidgets import (
@@ -20,6 +22,8 @@ LBL_MAX_SIZE: int = 120
 # -----------------
 
 class TaskListItem(QFrame):
+    del_btn_clicked_sig = pyqtSignal(int)
+    sel_btn_clicked_sig = pyqtSignal(int)
     def __init__(self, task_name : str, id : int):
         self.task_name = task_name
         self.id = id
@@ -44,6 +48,7 @@ class TaskListItem(QFrame):
         self.btn_select_task.setProperty("class", "task_item_btn")
         self.btn_select_task.setCursor(Qt.CursorShape.PointingHandCursor)
         self.btn_select_task.hide()
+        self.btn_select_task.clicked.connect(lambda x : self.sel_btn_clicked_sig.emit(self.id))
 
         self.btn_delete_task = QPushButton()
         self.btn_delete_task.setIcon(qta.icon("fa5s.trash"))
@@ -51,6 +56,7 @@ class TaskListItem(QFrame):
         self.btn_delete_task.setProperty("class", "task_item_btn")
         self.btn_delete_task.setCursor(Qt.CursorShape.PointingHandCursor)
         self.btn_delete_task.hide()
+        self.btn_delete_task.clicked.connect(lambda x : self.del_btn_clicked_sig.emit(self.id))
 
         self.empty_frame = QFrame()
 
@@ -74,5 +80,8 @@ class TaskListItem(QFrame):
     def leaveEvent(self, a0):
         self.btn_delete_task.hide()
         self.btn_select_task.hide()
+
+    def bind_btn_clicked(self, btn : QPushButton, action : Callable) -> None:
+        btn.clicked.connect(action)
 
     

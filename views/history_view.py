@@ -1,7 +1,7 @@
 from typing import Callable
 
 import qtawesome as qta
-from PyQt6.QtCore import Qt, QMargins, QSize, QDate
+from PyQt6.QtCore import Qt, QMargins, QSize, QDate, pyqtSignal
 from PyQt6.QtWidgets import (
     QFrame,
     QVBoxLayout,
@@ -51,6 +51,7 @@ TASK_LIST_SPACING: int = 5
 # --------------------
 
 class HistoryView(QFrame):
+    del_task_sig = pyqtSignal(int)
     def __init__(self, model : TaskModel):
         super().__init__()
         self.model = model
@@ -174,13 +175,13 @@ class HistoryView(QFrame):
     def bind_btn_clicked(self, btn : QPushButton, action: Callable) -> None:
         btn.clicked.connect(action)
     
-    def bind_check_clicked(self, checkBox : QCheckBox, action : Callable):
+    def bind_check_clicked(self, checkBox : QCheckBox, action : Callable) -> None:
         checkBox.clicked.connect(action)
 
-    def bind_combo_changed(self, comboBox : QComboBox, action : Callable):
+    def bind_combo_changed(self, comboBox : QComboBox, action : Callable) -> None:
         comboBox.currentIndexChanged.connect(action)
 
-    def bind_dateEdit_changed(self, action : Callable):
+    def bind_dateEdit_changed(self, action : Callable) -> None:
         self.spec_day_edit.dateChanged.connect(action)
 
     def refresh_data(self) -> None:
@@ -188,6 +189,8 @@ class HistoryView(QFrame):
         wd = None
         day = None
         
+        history_list = []
+
         if self.month_check.isChecked():
             month = self.month_combo.currentIndex() + 1
             
@@ -201,7 +204,11 @@ class HistoryView(QFrame):
 
         if self.is_reverse: raw_history_list.reverse()
 
-        history_list = [HistoryItem(task["name"], task["date"], task["id"]) for task in raw_history_list]
+        for task in raw_history_list:
+            item = HistoryItem(task["name"], task["date"], task["id"])
+            item.del_btn_signal.connect(self.del_task_sig.emit)
+            history_list.append(item)
+
         self.task_list.load_list(history_list)
    
     

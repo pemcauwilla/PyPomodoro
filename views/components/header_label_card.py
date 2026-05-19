@@ -17,7 +17,7 @@ class HeaderLabelCard(QFrame):
         self._setup_ui()
         self._setup_layout()
 
-    def _setup_ui(self):
+    def _setup_ui(self) -> None:
         self.setProperty("class", "header_label_card")        
         self.setFixedHeight(50)
 
@@ -30,7 +30,7 @@ class HeaderLabelCard(QFrame):
         self.label = QLabel(self.label_txt)
         self.label.setObjectName("header_card_label")
 
-    def _setup_layout(self):
+    def _setup_layout(self) -> None:
         main_layout = QHBoxLayout()
         main_layout.addWidget(self.label, alignment=Qt.AlignmentFlag.AlignCenter)
         

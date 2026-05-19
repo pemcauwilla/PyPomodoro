@@ -22,6 +22,8 @@ class HistoryController():
         self.view.bind_combo_changed(comboBox=self.view.week_day_combo, action=self.view.refresh_data)
         self.view.bind_dateEdit_changed(action=self.view.refresh_data)
 
+        self.view.del_task_sig.connect(self._del_btn_action)
+
     def _order_btn_action(self) -> None:
         self.view.is_reverse = not self.view.is_reverse
         _order_btn_idx = 0 if not self.view.is_reverse else 1
@@ -42,6 +44,9 @@ class HistoryController():
 
     def _enable_filter(self, wid : QWidget) -> None:
         wid.setDisabled(wid.isEnabled())
+
+    def _del_btn_action(self, task_id : int) -> None:
+        self.model.delete_task(task_id=task_id)
 
     
 
