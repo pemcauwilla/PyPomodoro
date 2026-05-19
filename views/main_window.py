@@ -12,6 +12,8 @@ from PyQt6.QtCore import(
 from .pomodoro_view import PomodoroView
 from .history_view import HistoryView
 
+from models.task_model import TaskModel
+
 # ---- Constants ----
 WINDOW_HEIGHT: int = 960
 WINDOW_WIDTH: int = 600
@@ -19,10 +21,12 @@ WINDOW_TITLE: str = "Pomodoro Timer"
 # -------------------
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, model : TaskModel):
         super().__init__()
         self.setFixedSize(QSize(WINDOW_HEIGHT,WINDOW_WIDTH))
         self.setWindowTitle(WINDOW_TITLE)
+
+        self.model = model
 
         self._setup_ui()
         self._setup_layout()
@@ -33,8 +37,8 @@ class MainWindow(QMainWindow):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
-        self.pom_view = PomodoroView()
-        self.hist_view = HistoryView()
+        self.pom_view = PomodoroView(self.model)
+        self.hist_view = HistoryView(self.model)
 
         self.central_widget = QStackedWidget()   
 

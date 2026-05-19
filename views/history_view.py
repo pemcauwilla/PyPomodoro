@@ -15,7 +15,9 @@ from PyQt6.QtWidgets import (
     QDateEdit
 )
 
+from models.task_model import TaskModel
 from .components.task_list import TaskList
+from .components.history_item import HistoryItem
 
 # ---- Constants -----
 # Window Spacings
@@ -49,11 +51,17 @@ TASK_LIST_SPACING: int = 5
 # --------------------
 
 class HistoryView(QFrame):
-    def __init__(self):
+    def __init__(self, model : TaskModel):
         super().__init__()
+        self.model = model
+        self.model.attach(self)
+
+        self.order_btn_icon_name: list[str] = ["fa5s.sort-amount-down", "fa5s.sort-amount-up"]
+        self.is_reverse = False
+
         self._setup_ui()
         self._setup_layout()
-
+        self.refresh_data()
 
     def _setup_ui(self) -> None:
         # Back Button
@@ -174,5 +182,27 @@ class HistoryView(QFrame):
 
     def bind_dateEdit_changed(self, action : Callable):
         self.spec_day_edit.dateChanged.connect(action)
+
+    def refresh_data(self) -> None:
+        month = None
+        wd = None
+        day = None
+        
+        if self.month_check.isChecked():
+            month = self.month_combo.currentIndex() + 1
+            
+        if self.week_day_check.isChecked():
+            wd = self.week_day_combo.currentIndex() + 1
+            
+        if self.spec_day_check.isChecked():
+            day = self.spec_day_edit.date().toString(format=Qt.DateFormat.ISODate)
+
+        raw_history_list = self.model.get_tasks(month=month, weekday=wd, day_str=day)
+
+        if self.is_reverse: raw_history_list.reverse()
+
+        history_list = [HistoryItem(task["name"], task["date"], task["id"]) for task in raw_history_list]
+        self.task_list.load_list(history_list)
+   
     
 

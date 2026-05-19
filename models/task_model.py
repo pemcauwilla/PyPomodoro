@@ -1,8 +1,11 @@
 import sqlite3
 from pathlib import Path
 
-class TaskModel:
+from core.subject import Subject
+
+class TaskModel(Subject):
     def __init__(self, db_name="pomodoro.db"):
+        super().__init__()
         self.db_name = "models" / Path(db_name)
         
         with sqlite3.connect(self.db_name) as conn:
@@ -35,9 +38,10 @@ class TaskModel:
                 """
                 cursor.execute(query, (name, date, duration))  
                 conn.commit()
+                inserted_id = cursor.lastrowid
         
-            inserted_id = cursor.lastrowid
             conn.close()
+            self.notify()
             return inserted_id
         except Exception as e:
             print(e)
@@ -108,6 +112,7 @@ class TaskModel:
                 conn.commit()
 
             cursor.close()
+            self.notify()
             return True
         except Exception as e:
             print(e)

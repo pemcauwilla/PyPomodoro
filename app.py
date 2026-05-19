@@ -13,9 +13,8 @@ class App():
     def __init__(self):
         app = QApplication(sys.argv)
         app.setStyleSheet(StyleManager.get_complete_stylesheet())
-        window = MainWindow()
-        
         model = TaskModel()
+        window = MainWindow(model)
         main_controller = MainViewController(view=window, model=model)
         window.show()
         sys.exit(app.exec())

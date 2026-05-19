@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, override
 
 from PyQt6.QtCore import Qt, QSize, QMargins
 from PyQt6.QtWidgets import (
@@ -13,8 +13,11 @@ from PyQt6.QtWidgets import (
 )
 import qtawesome as qta
 
+from core.observer import Observer
+from models.task_model import TaskModel
 from .components.header_label_card import HeaderLabelCard
 from .components.task_list import TaskList
+from .components.task_list_item import TaskListItem
 
 # ---- Constants -----
 # Buttons 
@@ -56,11 +59,15 @@ HTB_SPACING: int = 15
 MAIN_MARGINS: QMargins = QMargins(25,20,25,20)
 #---------------------
 
-class PomodoroView(QFrame):
-    def __init__(self):
+class PomodoroView(QFrame, Observer):
+    def __init__(self, model : TaskModel):
         super().__init__()
+        self.model = model
+        self.model.attach(self)
+
         self._setup_ui()
         self._setup_layouts()
+        self.refresh_data()
 
     def _setup_ui(self) -> None:
         # Header Section
@@ -196,4 +203,9 @@ class PomodoroView(QFrame):
     def bind_btn_clicked(self, btn : QPushButton, action : Callable) -> None:
         btn.clicked.connect(action)
 
+    @override
+    def refresh_data(self) -> None:
+        raw_task_list = self.model.get_all_tasks()
+        task_list = [TaskListItem(task["name"], task["id"]) for task in raw_task_list]
         
+        self.task_list.load_list(task_list)

@@ -19,9 +19,6 @@ class MainViewController():
         self.view.bind_btn_clicked(btn=self.view.hist_view.back_btn, action=self._stacked_widget_action)
 
     def _stacked_widget_action(self) -> None:
-        if self.view.central_widget.currentIndex() == 0:
-            self.hist_controller._apply_filters()
-        
         self.view.central_widget.setCurrentIndex(1 - self.view.central_widget.currentIndex())
 
     
