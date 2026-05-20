@@ -84,7 +84,7 @@ class PomodoroView(QFrame, Observer):
         self.pomodoro_timer_lbl.setProperty("class", "pom_view_timer")
 
         self.start_pause_btn = QPushButton("Start")
-        self.start_pause_btn.setProperty("class", "pom_view_start_btn") # create two different styles for "each" button
+        self.start_pause_btn.setProperty("class", "pom_view_start_btn") 
         self.start_pause_btn.setFixedWidth(START_BTN_WIDTH)
         self.start_pause_btn.setCursor(Qt.CursorShape.PointingHandCursor)
 
@@ -218,3 +218,20 @@ class PomodoroView(QFrame, Observer):
             task_list.append(item)
 
         self.task_list.load_list(task_list)
+
+    def update_header_cards(self, current_state: str) -> None:
+        self.pomodoro_card.setObjectName("")
+        self.small_break_card.setObjectName("")
+        self.long_break_card.setObjectName("")
+
+        match current_state:
+            case "WORK" | "INIT":
+                self.pomodoro_card.setObjectName("active_header_btn")
+            case "SHORT_BREAK":
+                self.small_break_card.setObjectName("active_header_btn")
+            case "LONG_BREAK":
+                self.long_break_card.setObjectName("active_header_btn")
+
+        for card in (self.pomodoro_card, self.small_break_card, self.long_break_card):
+            card.style().unpolish(card)
+            card.style().polish(card)

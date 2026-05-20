@@ -1,4 +1,5 @@
 from datetime import date
+import math
 
 from PyQt6.QtCore import QTimer
 
@@ -16,6 +17,8 @@ class PomodoroController():
         self.current_task_id = None
         self.time_left_seconds = 0
         self.is_running = False
+        self.current_state = "WORK"
+        self.pomodoros_completed = 0
 
         self.WORK_DURATION = 25 * 60 
         self.SHORT_BREAK = 5 * 60
@@ -54,11 +57,18 @@ class PomodoroController():
         # Logic Changes
         self.current_task_id = task["id"]
         self.WORK_DURATION = task["duration"] * 60
-        self.time_left_seconds = self.WORK_DURATION
+        
+        self.time_left_seconds = 25 * 60 
+        self.current_state = "WORK"
+        self.pomodoros_completed = 0
+        self.view.start_pause_btn.setDisabled(False) 
+        self.view.start_pause_btn.setText("Start")
 
-        # Visual Changes
+        self.view.update_header_cards(self.current_state)
+
         self.view.current_task_lbl.setText(task["name"])
-        self.view.current_task_status_lbl.setText(f"0/{task["duration"] // 25}")
+        total_pomodoros = math.ceil(task['duration'] / 25)
+        self.view.current_task_status_lbl.setText(f"0/{total_pomodoros}")
         self._update_timer_display()
         
     def _on_timer_tick(self) -> None:
@@ -68,7 +78,7 @@ class PomodoroController():
         else:
             self.timer.stop()
             self.is_running = False
-            print("Bip Bip Bip ! Pomodoro Terminé !")
+            self._handle_timer_completion()
             
     def _toggle_timer_action(self) -> None:
         if self.current_task_id is None:
@@ -89,7 +99,46 @@ class PomodoroController():
         time_str = f"{minutes:02d}:{seconds:02d}"
         self.view.pomodoro_timer_lbl.setText(time_str)    
     
+    def _handle_timer_completion(self) -> None:
+        total_pomodoros = math.ceil(self.WORK_DURATION / 60 / 25)
 
+        match self.current_state:
+            case "WORK":
+                self.pomodoros_completed += 1
+                
+                if self.pomodoros_completed >= total_pomodoros:
+                    self.current_state = "INIT" 
+                    self.time_left_seconds = 0
+                    self.view.start_pause_btn.setText("Terminé !")
+                    self.view.start_pause_btn.setDisabled(True) 
+
+                elif self.pomodoros_completed % 4 == 0:
+                    self.current_state = "LONG_BREAK"
+                    self.time_left_seconds = self.LONG_BREAK 
+
+                else:
+                    self.current_state = "SHORT_BREAK"
+                    self.time_left_seconds = self.SHORT_BREAK 
+
+            case "SHORT_BREAK" | "LONG_BREAK":
+                self.current_state = "WORK"
+                self.time_left_seconds = 25 * 60
+                
+            case "INIT":
+                self.timer.stop()
+                self.pomodoros_completed = 0
+                self.time_left_seconds = 25 * 60
+                self.current_state = "WORK"
+        
+        if self.current_state != "INIT":
+            self.timer.start()
+            self.is_running = True
+            self.view.start_pause_btn.setText("Pause")
+
+        self._update_timer_display()
+        self.view.current_task_status_lbl.setText(f"{self.pomodoros_completed}/{total_pomodoros}")
+        self.view.update_header_cards(self.current_state)
+                
 
     
 
