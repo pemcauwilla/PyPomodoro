@@ -96,8 +96,31 @@ class TaskModel(Subject):
                 return [dict(row) for row in cursor.fetchall()]
 
         except Exception as e:
-            print(f"Erreur SQL lors de la récupération dynamique : {e}")
+            print(f"Error when trying to get tasks : {e}")
             return []
+
+    def get_task_by_id(self, task_id : int) -> dict | None:
+        try:
+            task = None
+            with sqlite3.connect(self.db_name) as conn:
+                conn.row_factory = sqlite3.Row
+                cursor = conn.cursor()
+
+                query = """
+                    SELECT * FROM tasks
+                    WHERE id = (?)
+                """
+
+                cursor.execute(query, (task_id,))
+                row = cursor.fetchone()
+                cursor.close()
+                if row:
+                    return dict(row) 
+                else:
+                    return None
+                
+        except Exception as e:
+            print(f"Error when getting the required task: {e}")
 
     def delete_task(self, task_id : int) -> bool:
         """Delete a certain task according to its ID"""
